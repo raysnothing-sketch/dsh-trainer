@@ -14,7 +14,7 @@ const RED = "#a03a28";
 const RULE = "#d2c8b5";
 const MUTE = "#6d6659";
 
-/** Aperçu social du trainer : papier réglé, pas le thème du portfolio. */
+/** Aperçu social du trainer : papier réglé. */
 export default async function DshOpengraphImage({
   params,
 }: {

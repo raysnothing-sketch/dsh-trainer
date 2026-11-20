@@ -1,11 +1,10 @@
 /*
  * Identité visuelle propre au DSH-Trainer.
  *
- * Le portfolio utilise un thème sombre (ink / chalk / violet / cyan / lime).
- * Ici, tout est redéfini dans le périmètre `.dsh` : les utilitaires Tailwind
- * référencent `var(--color-*)`, donc une seule surcharge suffit à donner au
- * module son papier, son encre, ses accents et sa typographie. Aucune règle ne
- * sort de ce périmètre : le portfolio reste strictement inchangé.
+ * Palette papier/encre du trainer. Tout est redéfini dans le périmètre `.dsh` :
+ * les utilitaires Tailwind référencent `var(--color-*)`, donc une seule
+ * surcharge suffit à donner au module son papier, son encre, ses accents et sa
+ * typographie. Aucune règle ne sort de ce périmètre.
  */
 
 .dsh {
@@ -62,7 +61,7 @@
   border-radius: 1px;
 }
 
-/* Titres éditoriaux — aucune ressemblance avec la typo du portfolio. */
+/* Titres éditoriaux. */
 .dsh .font-display {
   font-family: var(--font-display);
 }
@@ -101,7 +100,7 @@
   border-radius: 0;
 }
 
-/* Le portfolio a ses pilules ; ici les contrôles sont carrés, comme un tampon. */
+/* Contrôles carrés, comme un tampon. */
 .dsh button,
 .dsh a[href] {
   border-radius: 2px;
@@ -127,7 +126,7 @@
 }
 
 /* Le lien « aller au contenu » et le fond vivent dans le layout racine, hors
-   de `.dsh` : on les neutralise pour que le portfolio ne déborde jamais ici. */
+   de `.dsh` : on les neutralise pour garder une surface cohérente. */
 body:has(.dsh) {
   background-color: #f4f0e6;
   color: #1d252b;

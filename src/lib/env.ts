@@ -1,4 +1,4 @@
-/** Configuration réduite du trainer : aucun service du portfolio. */
+/** Configuration du trainer : une seule URL publique. */
 export const env = {
   siteUrl: () =>
     process.env.NEXT_PUBLIC_SITE_URL ??

@@ -10,7 +10,7 @@ import "./dsh.css";
 
 /**
  * Typographies du module : un serif académique calme, un sans institutionnel
- * et un mono neutre. Aucune n'est partagée avec le portfolio.
+ * et un mono neutre, propres au trainer.
  */
 const display = Newsreader({
   subsets: ["latin"],

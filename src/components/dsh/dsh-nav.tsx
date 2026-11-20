@@ -9,8 +9,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * En-tête du trainer : papier, filet double, lettrage serifé.
- * Le sélecteur de langue est volontairement un simple "DE / EN / FR" :
- * le composant à pastilles du portfolio n'apparaît pas ici.
+ * Le sélecteur de langue est volontairement un simple "DE / EN / FR".
  */
 export function DshNav({ locale, copy }: { locale: Locale; copy: DshCopy }) {
   const pathname = usePathname();
