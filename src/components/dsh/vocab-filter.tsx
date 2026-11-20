@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import type { DshCopy } from "@/lib/dsh/copy";
+import { vocabTypeKeys } from "@/lib/dsh/vocab-types";
 import { cn } from "@/lib/utils";
 
 /**
@@ -10,7 +11,7 @@ import { cn } from "@/lib/utils";
  *
  * La liste complète reste dans le HTML – utile pour l'impression et les
  * moteurs de recherche – et ce composant ne fait que masquer les entrées qui
- * ne correspondent pas à la recherche ou au domaine choisi.
+ * ne correspondent pas à la recherche, au domaine ou à la classe grammaticale.
  */
 export function VocabFilter({
   domains,
@@ -23,9 +24,10 @@ export function VocabFilter({
 }) {
   const [query, setQuery] = useState("");
   const [domain, setDomain] = useState<string>("all");
+  const [wordType, setWordType] = useState<string>("all");
   const [visible, setVisible] = useState(total);
 
-  function apply(nextQuery: string, nextDomain: string) {
+  function apply(nextQuery: string, nextDomain: string, nextType: string) {
     const root = document.getElementById("wortschatz-liste");
     if (!root) return;
 
@@ -35,7 +37,8 @@ export function VocabFilter({
     root.querySelectorAll<HTMLElement>("[data-vocab-entry]").forEach((entry) => {
       const matchesQuery = !needle || (entry.dataset.search ?? "").includes(needle);
       const matchesDomain = nextDomain === "all" || entry.dataset.domain === nextDomain;
-      const show = matchesQuery && matchesDomain;
+      const matchesType = nextType === "all" || entry.dataset.type === nextType;
+      const show = matchesQuery && matchesDomain && matchesType;
       entry.hidden = !show;
       if (show) shown += 1;
     });
@@ -58,7 +61,7 @@ export function VocabFilter({
             value={query}
             onChange={(event) => {
               setQuery(event.target.value);
-              apply(event.target.value, domain);
+              apply(event.target.value, domain, wordType);
             }}
             placeholder={copy.vocab.search}
             className="w-full border border-line bg-ink px-3.5 py-2.5 text-[0.9rem] text-chalk placeholder:text-mute/80 focus:border-cyan focus:outline-none"
@@ -72,42 +75,90 @@ export function VocabFilter({
         </p>
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-1.5">
-        <button
-          type="button"
-          onClick={() => {
-            setDomain("all");
-            apply(query, "all");
-          }}
-          aria-pressed={domain === "all"}
-          className={cn(
-            "border px-3 py-1.5 font-mono text-[0.58rem] tracking-[0.1em] uppercase transition-colors",
-            domain === "all"
-              ? "border-violet bg-violet text-ink-card"
-              : "border-line text-mute hover:border-mute/60 hover:text-chalk",
-          )}
-        >
-          {copy.vocab.all}
-        </button>
-        {domains.map((entry) => (
+      <div className="mt-4">
+        <p className="font-mono text-[0.52rem] tracking-[0.14em] text-mute uppercase">
+          {copy.vocab.domains}
+        </p>
+        <div className="mt-2 flex flex-wrap gap-1.5">
           <button
-            key={entry.key}
             type="button"
             onClick={() => {
-              setDomain(entry.key);
-              apply(query, entry.key);
+              setDomain("all");
+              apply(query, "all", wordType);
             }}
-            aria-pressed={domain === entry.key}
+            aria-pressed={domain === "all"}
             className={cn(
               "border px-3 py-1.5 font-mono text-[0.58rem] tracking-[0.1em] uppercase transition-colors",
-              domain === entry.key
-                ? "border-cyan/60 bg-cyan/15 text-cyan"
+              domain === "all"
+                ? "border-violet bg-violet text-ink-card"
                 : "border-line text-mute hover:border-mute/60 hover:text-chalk",
             )}
           >
-            {entry.title} · {entry.count}
+            {copy.vocab.all}
           </button>
-        ))}
+          {domains.map((entry) => (
+            <button
+              key={entry.key}
+              type="button"
+              onClick={() => {
+                setDomain(entry.key);
+                apply(query, entry.key, wordType);
+              }}
+              aria-pressed={domain === entry.key}
+              className={cn(
+                "border px-3 py-1.5 font-mono text-[0.58rem] tracking-[0.1em] uppercase transition-colors",
+                domain === entry.key
+                  ? "border-cyan/60 bg-cyan/15 text-cyan"
+                  : "border-line text-mute hover:border-mute/60 hover:text-chalk",
+              )}
+            >
+              {entry.title} · {entry.count}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-4 border-t border-dashed border-line pt-3">
+        <p className="font-mono text-[0.52rem] tracking-[0.14em] text-mute uppercase">
+          {copy.vocab.wordType}
+        </p>
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          <button
+            type="button"
+            onClick={() => {
+              setWordType("all");
+              apply(query, domain, "all");
+            }}
+            aria-pressed={wordType === "all"}
+            className={cn(
+              "border px-3 py-1.5 font-mono text-[0.58rem] tracking-[0.1em] uppercase transition-colors",
+              wordType === "all"
+                ? "border-violet bg-violet text-ink-card"
+                : "border-line text-mute hover:border-mute/60 hover:text-chalk",
+            )}
+          >
+            {copy.vocab.allTypes}
+          </button>
+          {vocabTypeKeys.map((key) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => {
+                setWordType(key);
+                apply(query, domain, key);
+              }}
+              aria-pressed={wordType === key}
+              className={cn(
+                "border px-3 py-1.5 font-mono text-[0.58rem] tracking-[0.1em] uppercase transition-colors",
+                wordType === key
+                  ? "border-cyan/60 bg-cyan/15 text-cyan"
+                  : "border-line text-mute hover:border-mute/60 hover:text-chalk",
+              )}
+            >
+              {copy.vocab.types[key]}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );

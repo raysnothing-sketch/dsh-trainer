@@ -6,6 +6,7 @@ import { VocabTrainer } from "@/components/dsh/vocab-trainer";
 import { dshCopy } from "@/lib/dsh/copy";
 import { dshAlternates } from "@/lib/dsh/seo";
 import { vocabCount, vocabDomains, vocabEntries } from "@/lib/dsh/vocab";
+import { vocabTypeKeys } from "@/lib/dsh/vocab-types";
 import { isLocale } from "@/lib/i18n/config";
 
 export async function generateMetadata({
@@ -32,6 +33,13 @@ export default async function VocabularyPage({
   if (!isLocale(locale)) notFound();
   const copy = dshCopy[locale];
 
+  const typeCounts = Object.fromEntries(
+    vocabTypeKeys.map((key) => [
+      key,
+      vocabEntries.filter((entry) => entry.type === key).length,
+    ]),
+  ) as Record<string, number>;
+
   return (
     <div className="pb-20">
       <header className="shell border-b border-line pt-12 pb-10 sm:pt-16">
@@ -43,7 +51,7 @@ export default async function VocabularyPage({
           {copy.vocab.lead}
         </p>
 
-        <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-4 border-t border-line pt-4 font-mono text-[0.6rem] tracking-[0.12em] text-mute uppercase">
+        <dl className="mt-8 flex flex-wrap gap-x-8 gap-y-4 border-t border-line pt-4 font-mono text-[0.6rem] tracking-[0.12em] text-mute uppercase">
           <div className="flex items-baseline gap-2">
             <dt>{copy.vocab.domains}</dt>
             <dd className="text-violet tabular-nums">
@@ -54,6 +62,12 @@ export default async function VocabularyPage({
             <dt>{copy.vocab.entries}</dt>
             <dd className="text-violet tabular-nums">{vocabCount}</dd>
           </div>
+          {vocabTypeKeys.map((key) => (
+            <div key={key} className="flex items-baseline gap-1.5">
+              <dt>{copy.vocab.types[key]}</dt>
+              <dd className="text-cyan tabular-nums">{typeCounts[key]}</dd>
+            </div>
+          ))}
         </dl>
 
         <nav aria-label={copy.vocab.domains} className="mt-7 flex flex-wrap gap-x-5 gap-y-2">
@@ -118,8 +132,12 @@ export default async function VocabularyPage({
                     key={`${domain.key}-${entry.term}`}
                     data-vocab-entry="true"
                     data-domain={domain.key}
+                    data-type={entry.type}
                     data-search={[
                       entry.term,
+                      entry.forms ?? "",
+                      entry.type,
+                      copy.vocab.types[entry.type],
                       entry.definition,
                       entry.example,
                       entry.glossEn,
@@ -128,11 +146,19 @@ export default async function VocabularyPage({
                     ]
                       .join(" ")
                       .toLowerCase()}
-                    className="panel p-4 sm:p-5"
+                    className="panel flex flex-col p-4 sm:p-5"
                   >
-                    <h4 className="font-display text-[1.08rem] leading-snug text-chalk">
-                      {entry.term}
-                    </h4>
+                    <div className="flex items-start justify-between gap-3">
+                      <h4 className="font-display text-[1.08rem] leading-snug text-chalk">
+                        {entry.term}
+                      </h4>
+                      <span className="dsh-stamp shrink-0 text-cyan">
+                        {copy.vocab.types[entry.type]}
+                      </span>
+                    </div>
+                    {entry.forms ? (
+                      <p className="mt-1 font-mono text-[0.68rem] text-cyan">{entry.forms}</p>
+                    ) : null}
                     <p className="mt-2 font-display text-[0.9rem] leading-relaxed text-chalk/85">
                       {entry.definition}
                     </p>
@@ -144,7 +170,7 @@ export default async function VocabularyPage({
                         {copy.vocab.collocation}: {entry.collocation}
                       </p>
                     ) : null}
-                    <p className="mt-3 border-t border-dashed border-line pt-2 font-mono text-[0.55rem] tracking-[0.08em] text-mute uppercase">
+                    <p className="mt-auto border-t border-dashed border-line pt-2 font-mono text-[0.55rem] tracking-[0.08em] text-mute uppercase">
                       {copy.vocab.en}: {entry.glossEn} · {copy.vocab.fr}: {entry.glossFr}
                     </p>
                   </article>

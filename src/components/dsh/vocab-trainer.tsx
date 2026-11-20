@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import type { DshCopy } from "@/lib/dsh/copy";
 import type { VocabEntry } from "@/lib/dsh/vocab";
+import { vocabTypeKeys } from "@/lib/dsh/vocab-types";
 import { cn } from "@/lib/utils";
 
 type TrainerEntry = VocabEntry & { id: string; domain: string; domainTitle: string };
@@ -27,6 +28,7 @@ export function VocabTrainer({
   copy: DshCopy;
 }) {
   const [domain, setDomain] = useState("all");
+  const [wordType, setWordType] = useState("all");
   const [deck, setDeck] = useState<TrainerEntry[]>([]);
   const [total, setTotal] = useState(0);
   const [flipped, setFlipped] = useState(false);
@@ -36,9 +38,14 @@ export function VocabTrainer({
   const finished = total > 0 && deck.length === 0;
   const progress = total === 0 ? 0 : Math.round(reviewed / total * 100);
 
-  function start(nextDomain = domain) {
-    const pool = nextDomain === "all" ? entries : entries.filter((entry) => entry.domain === nextDomain);
+  function start(nextDomain = domain, nextType = wordType) {
+    const pool = entries.filter(
+      (entry) =>
+        (nextDomain === "all" || entry.domain === nextDomain) &&
+        (nextType === "all" || entry.type === nextType),
+    );
     setDomain(nextDomain);
+    setWordType(nextType);
     setDeck(shuffle(pool));
     setTotal(pool.length);
     setReviewed(0);
@@ -57,6 +64,15 @@ export function VocabTrainer({
     );
     setFlipped(false);
   }
+
+  const typeCounts = Object.fromEntries(
+    vocabTypeKeys.map((key) => [
+      key,
+      entries.filter((entry) =>
+        (domain === "all" || entry.domain === domain) && entry.type === key,
+      ).length,
+    ]),
+  ) as Record<string, number>;
 
   return (
     <section id="karten" className="shell mt-12 scroll-mt-28">
@@ -77,7 +93,7 @@ export function VocabTrainer({
         <div className="mt-4 flex flex-wrap gap-1.5">
           <button
             type="button"
-            onClick={() => start("all")}
+            onClick={() => start("all", wordType)}
             aria-pressed={domain === "all"}
             className={cn(
               "border px-3 py-1.5 font-mono text-[0.58rem] tracking-[0.1em] uppercase transition-colors",
@@ -94,7 +110,7 @@ export function VocabTrainer({
               <button
                 key={entry.key}
                 type="button"
-                onClick={() => start(entry.key)}
+                onClick={() => start(entry.key, wordType)}
                 aria-pressed={domain === entry.key}
                 className={cn(
                   "border px-3 py-1.5 font-mono text-[0.58rem] tracking-[0.1em] uppercase transition-colors",
@@ -107,6 +123,38 @@ export function VocabTrainer({
               </button>
             );
           })}
+        </div>
+
+        <div className="mt-3 flex flex-wrap gap-1.5 border-t border-dashed border-line pt-3">
+          <button
+            type="button"
+            onClick={() => start(domain, "all")}
+            aria-pressed={wordType === "all"}
+            className={cn(
+              "border px-3 py-1.5 font-mono text-[0.58rem] tracking-[0.1em] uppercase transition-colors",
+              wordType === "all"
+                ? "border-violet bg-violet text-ink-card"
+                : "border-line text-mute hover:border-mute/60 hover:text-chalk",
+            )}
+          >
+            {copy.vocab.allTypes}
+          </button>
+          {vocabTypeKeys.map((key) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => start(domain, key)}
+              aria-pressed={wordType === key}
+              className={cn(
+                "border px-3 py-1.5 font-mono text-[0.58rem] tracking-[0.1em] uppercase transition-colors",
+                wordType === key
+                  ? "border-cyan/60 bg-cyan/15 text-cyan"
+                  : "border-line text-mute hover:border-mute/60 hover:text-chalk",
+              )}
+            >
+              {copy.vocab.types[key]} · {typeCounts[key]}
+            </button>
+          ))}
         </div>
 
         <div className="mt-3 h-1 w-full bg-line">
@@ -142,7 +190,12 @@ export function VocabTrainer({
           <div className="mt-6">
             <article className="border border-line bg-ink px-5 py-6 sm:px-7 sm:py-8">
               <div className="flex items-start justify-between gap-4">
-                <p className="dsh-margin-note">{current.domainTitle}</p>
+                <div>
+                  <p className="dsh-margin-note">{current.domainTitle}</p>
+                  <p className="mt-1 font-mono text-[0.55rem] tracking-[0.12em] text-cyan uppercase">
+                    {copy.vocab.types[current.type]}
+                  </p>
+                </div>
                 <span className="font-mono text-[0.55rem] text-mute tabular-nums">
                   {deck.length} ↺
                 </span>
@@ -151,6 +204,9 @@ export function VocabTrainer({
               <p className="mt-5 font-display text-[clamp(1.5rem,3.4vw,2.1rem)] leading-tight text-chalk">
                 {current.term}
               </p>
+              {current.forms ? (
+                <p className="mt-1 font-mono text-[0.68rem] text-cyan">{current.forms}</p>
+              ) : null}
 
               {flipped ? (
                 <div className="mt-5 space-y-4 border-t border-dashed border-line pt-5">

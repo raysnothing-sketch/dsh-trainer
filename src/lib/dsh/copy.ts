@@ -1,5 +1,6 @@
 import type { Locale } from "@/lib/i18n/config";
 import type { DshLevelKey } from "@/lib/dsh/types";
+import type { VocabType } from "@/lib/dsh/vocab-types";
 
 /**
  * Textes d'interface du module DSH.
@@ -219,6 +220,10 @@ export type DshCopy = {
     search: string;
     all: string;
     term: string;
+    wordType: string;
+    allTypes: string;
+    types: Record<VocabType, string>;
+    forms: string;
     definition: string;
     example: string;
     collocation: string;
@@ -482,12 +487,23 @@ const de: DshCopy = {
     kicker: "DSH · Wortschatz nach Fachbereich",
     title: "Wörter, die ein Studium tragen.",
     lead:
-      "Acht Fachbereiche, über 150 Begriffe: Definition auf Deutsch, englische und französische Entsprechung, Beispielsatz und typische Wendung – zum Nachschlagen und zum Karten-Training.",
+      "Sechzehn Fachbereiche von der Informatik bis zur Psychologie, über 400 Begriffe: Substantive, Verben, Adjektive, Adverben und Wendungen mit deutscher Definition, Beispielsatz und englisch-französischer Entsprechung – zum Nachschlagen und Trainieren.",
     domains: "Fachbereiche",
     entries: "Begriffe",
     search: "Im Wortschatz suchen",
     all: "Alle",
     term: "Begriff",
+    wordType: "Wortart",
+    allTypes: "Alle Wortarten",
+    types: {
+      noun: "Substantiv",
+      verb: "Verb",
+      adjective: "Adjektiv",
+      adverb: "Adverb",
+      phrase: "Wendung",
+      other: "Sonstige",
+    },
+    forms: "Formen",
     definition: "Definition",
     example: "Beispiel",
     collocation: "Wendung",
@@ -495,7 +511,7 @@ const de: DshCopy = {
     fr: "Französisch",
     trainerTitle: "Karten-Training",
     trainerLead:
-      "Wähle einen Fachbereich und entscheide, ob du den Begriff kennst. Was du nicht kennst, kommt in die nächste Runde.",
+      "Wähle Fachbereich und Wortart und entscheide, ob du den Begriff kennst. Was du nicht kennst, kommt in die nächste Runde.",
     trainerStart: "Karten starten",
     trainerHint: "Wie gut kennst du diesen Begriff?",
     flip: "Umdrehen",
@@ -764,12 +780,23 @@ const fr: DshCopy = {
     kicker: "DSH · Vocabulaire par domaine",
     title: "Les mots qui portent des études.",
     lead:
-      "Huit domaines, plus de 150 termes : définition en allemand, équivalent anglais et français, phrase d'exemple et tournure typique – à consulter ou à réviser en cartes.",
+      "Seize domaines, de l'informatique à la psychologie, plus de 400 termes : noms, verbes, adjectifs, adverbes et expressions, avec définition en allemand, exemple et équivalent anglais/français – à consulter ou à réviser en cartes.",
     domains: "Domaines",
     entries: "Termes",
     search: "Rechercher dans le vocabulaire",
     all: "Tous",
     term: "Terme",
+    wordType: "Classe grammaticale",
+    allTypes: "Toutes les classes",
+    types: {
+      noun: "Nom",
+      verb: "Verbe",
+      adjective: "Adjectif",
+      adverb: "Adverbe",
+      phrase: "Expression",
+      other: "Autre",
+    },
+    forms: "Formes",
     definition: "Définition",
     example: "Exemple",
     collocation: "Tournure",
@@ -777,7 +804,7 @@ const fr: DshCopy = {
     fr: "Français",
     trainerTitle: "Révision par cartes",
     trainerLead:
-      "Choisissez un domaine et dites si vous connaissez le terme. Ce que vous ne connaissez pas revient à la manche suivante.",
+      "Choisissez un domaine et une classe grammaticale, puis dites si vous connaissez le terme. Ce que vous ne connaissez pas revient à la manche suivante.",
     trainerStart: "Commencer les cartes",
     trainerHint: "Connaissez-vous ce terme ?",
     flip: "Retourner",
@@ -1046,12 +1073,23 @@ const en: DshCopy = {
     kicker: "DSH · Vocabulary by field",
     title: "Words that carry a degree.",
     lead:
-      "Eight fields, more than 150 terms: a definition in German, the English and French equivalent, an example sentence and a typical collocation – to look up or revise with flashcards.",
+      "Sixteen fields from computer science to psychology, more than 400 terms: nouns, verbs, adjectives, adverbs and phrases, each with a German definition, an example and the English/French equivalent – to look up or revise with flashcards.",
     domains: "Fields",
     entries: "Terms",
     search: "Search the vocabulary",
     all: "All",
     term: "Term",
+    wordType: "Part of speech",
+    allTypes: "All parts of speech",
+    types: {
+      noun: "Noun",
+      verb: "Verb",
+      adjective: "Adjective",
+      adverb: "Adverb",
+      phrase: "Phrase",
+      other: "Other",
+    },
+    forms: "Forms",
     definition: "Definition",
     example: "Example",
     collocation: "Collocation",
@@ -1059,7 +1097,7 @@ const en: DshCopy = {
     fr: "French",
     trainerTitle: "Flashcard training",
     trainerLead:
-      "Pick a field and decide whether you know the term. Anything you do not know returns in the next round.",
+      "Pick a field and a part of speech, then decide whether you know the term. Anything you do not know returns in the next round.",
     trainerStart: "Start the cards",
     trainerHint: "How well do you know this term?",
     flip: "Flip",
