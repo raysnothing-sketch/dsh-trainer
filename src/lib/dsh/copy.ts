@@ -187,6 +187,56 @@ export type DshCopy = {
     lessonLabel: string;
     tipLabel: string;
   };
+  math: {
+    nav: string;
+    kicker: string;
+    title: string;
+    lead: string;
+    chapters: string;
+    lessons: string;
+    terms: string;
+    reading: string;
+    meaning: string;
+    trainerTitle: string;
+    trainerLead: string;
+    trainerStart: string;
+    trainerQuestion: string;
+    trainerProgress: string;
+    trainerScore: string;
+    trainerNext: string;
+    trainerRestart: string;
+    trainerDone: string;
+    trainerCorrect: string;
+    trainerWrong: string;
+  };
+  vocab: {
+    nav: string;
+    kicker: string;
+    title: string;
+    lead: string;
+    domains: string;
+    entries: string;
+    search: string;
+    all: string;
+    term: string;
+    definition: string;
+    example: string;
+    collocation: string;
+    en: string;
+    fr: string;
+    trainerTitle: string;
+    trainerLead: string;
+    trainerStart: string;
+    trainerHint: string;
+    flip: string;
+    known: string;
+    again: string;
+    trainerDone: string;
+    trainerRestart: string;
+    progressLabel: string;
+    empty: string;
+    back: string;
+  };
   types: Record<string, string>;
   levels: Record<DshLevelKey, { label: string; note: string }>;
 };
@@ -402,6 +452,60 @@ const de: DshCopy = {
     open: "Lernen",
     lessonLabel: "Lektion",
     tipLabel: "Tipp",
+  },
+  math: {
+    nav: "Mathematik",
+    kicker: "DSH · Mathematik auf Deutsch",
+    title: "Die Sprache der Zahlen.",
+    lead:
+      "Wer in Deutschland Mathematik, Informatik oder Ingenieurwesen studiert, hört Vorlesungen auf Deutsch. Sechs Kapitel führen von der Mengennotation bis zum Beweis – mit Fachbegriffen, Lesebeispielen und einem Begrifftrainer.",
+    chapters: "Kapitel",
+    lessons: "Lektionen",
+    terms: "Fachbegriffe",
+    reading: "Gelesen als",
+    meaning: "Bedeutung",
+    trainerTitle: "Begriffe trainieren",
+    trainerLead:
+      "Zehn Fragen pro Runde: Wähle die richtige Bedeutung des Fachbegriffs. Die Begriffe stammen aus allen sechs Kapiteln.",
+    trainerStart: "Runde starten",
+    trainerQuestion: "Was bedeutet",
+    trainerProgress: "Frage",
+    trainerScore: "Punkte",
+    trainerNext: "Weiter",
+    trainerRestart: "Neue Runde",
+    trainerDone: "Runde beendet",
+    trainerCorrect: "Richtig",
+    trainerWrong: "Nicht richtig",
+  },
+  vocab: {
+    nav: "Wortschatz",
+    kicker: "DSH · Wortschatz nach Fachbereich",
+    title: "Wörter, die ein Studium tragen.",
+    lead:
+      "Acht Fachbereiche, über 150 Begriffe: Definition auf Deutsch, englische und französische Entsprechung, Beispielsatz und typische Wendung – zum Nachschlagen und zum Karten-Training.",
+    domains: "Fachbereiche",
+    entries: "Begriffe",
+    search: "Im Wortschatz suchen",
+    all: "Alle",
+    term: "Begriff",
+    definition: "Definition",
+    example: "Beispiel",
+    collocation: "Wendung",
+    en: "Englisch",
+    fr: "Französisch",
+    trainerTitle: "Karten-Training",
+    trainerLead:
+      "Wähle einen Fachbereich und entscheide, ob du den Begriff kennst. Was du nicht kennst, kommt in die nächste Runde.",
+    trainerStart: "Karten starten",
+    trainerHint: "Wie gut kennst du diesen Begriff?",
+    flip: "Umdrehen",
+    known: "Gewusst",
+    again: "Noch einmal",
+    trainerDone: "Alle Begriffe dieser Runde geschafft.",
+    trainerRestart: "Neu starten",
+    progressLabel: "Karten",
+    empty: "Keine Einträge gefunden.",
+    back: "Zurück zur Übersicht",
   },
   types: {
     passiversatz: "Passiversatz",
@@ -631,6 +735,60 @@ const fr: DshCopy = {
     lessonLabel: "Leçon",
     tipLabel: "Conseil",
   },
+  math: {
+    nav: "Mathématiques",
+    kicker: "DSH · Les mathématiques en allemand",
+    title: "La langue des nombres.",
+    lead:
+      "Qui étudie les mathématiques, l'informatique ou l'ingénierie en Allemagne suit des cours en allemand. Six chapitres mènent de la notation des ensembles à la démonstration – avec les termes techniques, des exemples de lecture et un entraîneur de vocabulaire.",
+    chapters: "Chapitres",
+    lessons: "Leçons",
+    terms: "Termes techniques",
+    reading: "Se lit",
+    meaning: "Signification",
+    trainerTitle: "Entraîner les termes",
+    trainerLead:
+      "Dix questions par manche : choisissez la bonne signification du terme. Les termes proviennent des six chapitres.",
+    trainerStart: "Commencer la manche",
+    trainerQuestion: "Que signifie",
+    trainerProgress: "Question",
+    trainerScore: "Points",
+    trainerNext: "Suivant",
+    trainerRestart: "Nouvelle manche",
+    trainerDone: "Manche terminée",
+    trainerCorrect: "Juste",
+    trainerWrong: "Incorrect",
+  },
+  vocab: {
+    nav: "Vocabulaire",
+    kicker: "DSH · Vocabulaire par domaine",
+    title: "Les mots qui portent des études.",
+    lead:
+      "Huit domaines, plus de 150 termes : définition en allemand, équivalent anglais et français, phrase d'exemple et tournure typique – à consulter ou à réviser en cartes.",
+    domains: "Domaines",
+    entries: "Termes",
+    search: "Rechercher dans le vocabulaire",
+    all: "Tous",
+    term: "Terme",
+    definition: "Définition",
+    example: "Exemple",
+    collocation: "Tournure",
+    en: "Anglais",
+    fr: "Français",
+    trainerTitle: "Révision par cartes",
+    trainerLead:
+      "Choisissez un domaine et dites si vous connaissez le terme. Ce que vous ne connaissez pas revient à la manche suivante.",
+    trainerStart: "Commencer les cartes",
+    trainerHint: "Connaissez-vous ce terme ?",
+    flip: "Retourner",
+    known: "Connu",
+    again: "À revoir",
+    trainerDone: "Toutes les cartes de cette manche sont passées.",
+    trainerRestart: "Recommencer",
+    progressLabel: "Cartes",
+    empty: "Aucun terme trouvé.",
+    back: "Retour à la vue d'ensemble",
+  },
   types: {
     passiversatz: "Substituts du passif",
     partizipialattribut: "Attribut participial",
@@ -858,6 +1016,60 @@ const en: DshCopy = {
     open: "Learn",
     lessonLabel: "Lesson",
     tipLabel: "Tip",
+  },
+  math: {
+    nav: "Mathematics",
+    kicker: "DSH · Mathematics in German",
+    title: "The language of numbers.",
+    lead:
+      "Anyone studying mathematics, computer science or engineering in Germany attends lectures in German. Six chapters take you from set notation to proof – with technical terms, reading examples and a term trainer.",
+    chapters: "Chapters",
+    lessons: "Lessons",
+    terms: "Technical terms",
+    reading: "Read aloud",
+    meaning: "Meaning",
+    trainerTitle: "Train the terms",
+    trainerLead:
+      "Ten questions per round: pick the correct meaning of the term. Terms come from all six chapters.",
+    trainerStart: "Start a round",
+    trainerQuestion: "What does",
+    trainerProgress: "Question",
+    trainerScore: "Points",
+    trainerNext: "Next",
+    trainerRestart: "New round",
+    trainerDone: "Round complete",
+    trainerCorrect: "Correct",
+    trainerWrong: "Not correct",
+  },
+  vocab: {
+    nav: "Vocabulary",
+    kicker: "DSH · Vocabulary by field",
+    title: "Words that carry a degree.",
+    lead:
+      "Eight fields, more than 150 terms: a definition in German, the English and French equivalent, an example sentence and a typical collocation – to look up or revise with flashcards.",
+    domains: "Fields",
+    entries: "Terms",
+    search: "Search the vocabulary",
+    all: "All",
+    term: "Term",
+    definition: "Definition",
+    example: "Example",
+    collocation: "Collocation",
+    en: "English",
+    fr: "French",
+    trainerTitle: "Flashcard training",
+    trainerLead:
+      "Pick a field and decide whether you know the term. Anything you do not know returns in the next round.",
+    trainerStart: "Start the cards",
+    trainerHint: "How well do you know this term?",
+    flip: "Flip",
+    known: "Known",
+    again: "Review again",
+    trainerDone: "Every card in this round is done.",
+    trainerRestart: "Start over",
+    progressLabel: "Cards",
+    empty: "No matching terms.",
+    back: "Back to overview",
   },
   types: {
     passiversatz: "Passive substitutes",

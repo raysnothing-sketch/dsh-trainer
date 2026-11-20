@@ -42,6 +42,16 @@ export function DshNav({ locale, copy }: { locale: Locale; copy: DshCopy }) {
       active: pathname.includes("/schreiben"),
     },
     {
+      href: `/${locale}/mathematik`,
+      label: copy.math.nav,
+      active: pathname.includes("/mathematik"),
+    },
+    {
+      href: `/${locale}/wortschatz`,
+      label: copy.vocab.nav,
+      active: pathname.includes("/wortschatz"),
+    },
+    {
       href: `/${locale}/lernen`,
       label: copy.learn.nav,
       active: pathname.includes("/lernen"),
@@ -67,14 +77,14 @@ export function DshNav({ locale, copy }: { locale: Locale; copy: DshCopy }) {
 
         <span aria-hidden="true" className="hidden h-7 w-px bg-line lg:block" />
 
-        <ul className="ml-auto hidden items-center gap-4 lg:flex xl:gap-6 2xl:gap-7">
+        <ul className="ml-auto hidden items-center gap-3 lg:flex xl:gap-5 2xl:gap-6">
           {links.map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}
                 aria-current={link.active ? "page" : undefined}
                 className={cn(
-                  "relative py-1 text-[0.85rem] whitespace-nowrap transition-colors",
+                  "relative py-1 text-[0.82rem] whitespace-nowrap transition-colors",
                   link.active
                     ? "text-violet after:absolute after:inset-x-0 after:-bottom-1 after:h-px after:bg-violet"
                     : "text-mute hover:text-chalk",

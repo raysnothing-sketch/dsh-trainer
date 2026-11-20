@@ -15,6 +15,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/hoeren",
     "/sprechen",
     "/schreiben",
+    "/mathematik",
+    "/wortschatz",
     ...simulations.map((simulation) => `/simulation/${simulation.slug}`),
   ];
 

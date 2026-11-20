@@ -167,6 +167,24 @@ body:has(.dsh) > a[href="#contenu"]:focus {
   transform: rotate(-1.5deg);
 }
 
+/* Lektionen als aufklappbare Karteikarten – ohne JavaScript. */
+.dsh .dsh-details > summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.dsh .dsh-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.dsh .dsh-details > summary::marker {
+  content: "";
+}
+
+.dsh .dsh-details[open] .dsh-details-mark {
+  transform: rotate(45deg);
+}
+
 @media print {
   .dsh {
     background: #fff;

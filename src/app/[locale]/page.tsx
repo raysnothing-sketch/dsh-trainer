@@ -6,7 +6,9 @@ import { ArrowIcon } from "@/components/icons";
 import { dshCopy } from "@/lib/dsh/copy";
 import { drillCategories } from "@/lib/dsh/drills";
 import { levelTone, simulations, TOTAL_POINTS } from "@/lib/dsh";
+import { mathChapters, mathTermCount } from "@/lib/dsh/math";
 import { getModule, type DshModuleKey } from "@/lib/dsh/modules";
+import { vocabCount, vocabDomains } from "@/lib/dsh/vocab";
 import { dshAlternates } from "@/lib/dsh/seo";
 import { isLocale } from "@/lib/i18n/config";
 
@@ -341,7 +343,91 @@ export default async function DshHomePage({
       </section>
 
       <section className="shell mt-16">
-        <p className="dsh-margin-note">04 — {copy.hub.howTitle}</p>
+        <header className="flex flex-col gap-3 border-b border-line pb-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="dsh-margin-note">
+              04 —{" "}
+              {locale === "fr"
+                ? "Langue des études"
+                : locale === "en"
+                  ? "Academic language"
+                  : "Fachsprache"}
+            </p>
+            <h2 className="mt-2 text-[clamp(1.7rem,3.2vw,2.4rem)]">
+              {locale === "fr"
+                ? "La langue de votre discipline."
+                : locale === "en"
+                  ? "The language of your field."
+                  : "Die Sprache deines Faches."}
+            </h2>
+            <p className="mt-2 max-w-2xl font-display text-[0.98rem] leading-relaxed text-mute">
+              {locale === "fr"
+                ? "Deux espaces qui reviennent dans toutes les filières : les mathématiques en allemand et le vocabulaire de votre domaine."
+                : locale === "en"
+                  ? "Two areas that come up in every degree programme: mathematics in German and the vocabulary of your own field."
+                  : "Zwei Bereiche, die in jedem Studiengang wiederkehren: die Mathematik auf Deutsch und der Wortschatz deines Faches."}
+            </p>
+          </div>
+          <span className="shrink-0 font-mono text-[0.6rem] tracking-[0.12em] text-mute uppercase">
+            02
+          </span>
+        </header>
+
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <Link
+            href={`/${locale}/mathematik`}
+            className="group panel flex flex-col border-t-2 border-t-line p-5 transition-colors hover:border-t-violet sm:p-6"
+          >
+            <div className="flex items-baseline justify-between">
+              <span className="font-display text-[2.2rem] leading-none text-violet/80">∑</span>
+              <span className="dsh-stamp text-mute">
+                {String(mathChapters.length).padStart(2, "0")} {copy.math.chapters}
+              </span>
+            </div>
+            <h3 className="mt-5 font-display text-[1.32rem] text-chalk">{copy.math.nav}</h3>
+            <p className="mt-1.5 font-display text-[0.93rem] leading-relaxed text-mute">
+              {copy.math.lead}
+            </p>
+            <div className="mt-auto flex items-center justify-between border-t border-dashed border-line pt-3 font-mono text-[0.56rem] tracking-[0.08em] text-mute uppercase">
+              <span>
+                {mathTermCount} {copy.math.terms} · {copy.math.trainerTitle}
+              </span>
+              <span className="flex items-center gap-1 text-violet">
+                {copy.hub.open}
+                <ArrowIcon className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+              </span>
+            </div>
+          </Link>
+
+          <Link
+            href={`/${locale}/wortschatz`}
+            className="group panel flex flex-col border-t-2 border-t-line p-5 transition-colors hover:border-t-violet sm:p-6"
+          >
+            <div className="flex items-baseline justify-between">
+              <span className="font-display text-[2.2rem] leading-none text-violet/80">W</span>
+              <span className="dsh-stamp text-mute">
+                {String(vocabDomains.length).padStart(2, "0")} {copy.vocab.domains}
+              </span>
+            </div>
+            <h3 className="mt-5 font-display text-[1.32rem] text-chalk">{copy.vocab.nav}</h3>
+            <p className="mt-1.5 font-display text-[0.93rem] leading-relaxed text-mute">
+              {copy.vocab.lead}
+            </p>
+            <div className="mt-auto flex items-center justify-between border-t border-dashed border-line pt-3 font-mono text-[0.56rem] tracking-[0.08em] text-mute uppercase">
+              <span>
+                {vocabCount} {copy.vocab.entries} · {copy.vocab.trainerTitle}
+              </span>
+              <span className="flex items-center gap-1 text-violet">
+                {copy.hub.open}
+                <ArrowIcon className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+              </span>
+            </div>
+          </Link>
+        </div>
+      </section>
+
+      <section className="shell mt-16">
+        <p className="dsh-margin-note">05 — {copy.hub.howTitle}</p>
         <h2 className="mt-2 mb-7 text-[clamp(1.7rem,3.2vw,2.4rem)]">{copy.hub.howTitle}</h2>
         <ol className="grid gap-4 md:grid-cols-3">
           {copy.hub.steps.map((step, index) => (
@@ -359,7 +445,7 @@ export default async function DshHomePage({
       <section id="leitfaden" className="shell mt-16 scroll-mt-28">
         <div className="grid gap-10 lg:grid-cols-[1.25fr_0.75fr]">
           <div>
-            <p className="dsh-margin-note">05 — {copy.hub.scaleTitle}</p>
+            <p className="dsh-margin-note">06 — {copy.hub.scaleTitle}</p>
             <h2 className="mt-2 text-[clamp(1.7rem,3.2vw,2.4rem)]">{copy.hub.scaleTitle}</h2>
             <p className="mt-2 max-w-lg font-display text-[1rem] leading-relaxed text-mute">
               {copy.hub.scaleLead}
