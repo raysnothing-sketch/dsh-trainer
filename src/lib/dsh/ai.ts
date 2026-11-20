@@ -41,20 +41,38 @@ Antworte ausschließlich mit gültigem JSON in diesem Format:
 
 type ProviderMessage = { role: "system" | "user"; content: string };
 
-function config() {
-  return {
-    key: process.env.DSH_AI_API_KEY ?? "",
-    base: (process.env.DSH_AI_BASE_URL ?? "https://api.openai.com/v1").replace(/\/$/, ""),
-    model: process.env.DSH_AI_MODEL ?? "gpt-4o-mini",
+type Provider = { key: string; base: string; model: string };
+
+function providers(): Provider[] {
+  const list: Provider[] = [];
+  const add = (key: string | undefined, base: string, model: string) => {
+    if (key) list.push({ key, base: base.replace(/\/$/, ""), model });
   };
+
+  add(
+    process.env.DSH_AI_API_KEY,
+    process.env.DSH_AI_BASE_URL ?? "https://api.openai.com/v1",
+    process.env.DSH_AI_MODEL ?? "gpt-4o-mini",
+  );
+  add(
+    process.env.KIMI_API_KEY,
+    process.env.KIMI_BASE_URL ?? "https://api.moonshot.ai/v1",
+    process.env.KIMI_MODEL ?? "kimi-k3.1-pro",
+  );
+  add(
+    process.env.OMNIROUTE_API_KEY,
+    process.env.OMNIROUTE_BASE_URL ?? "http://localhost:20128/v1",
+    process.env.OMNIROUTE_MODEL ?? process.env.KIMI_MODEL ?? "kimi-k3.1-pro",
+  );
+  return list;
 }
 
 export function aiConfigured(): boolean {
-  return config().key.length > 0;
+  return providers().length > 0;
 }
 
 export function aiModelName(): string {
-  return config().model;
+  return providers()[0]?.model ?? "";
 }
 
 type TaskPayload = {
@@ -152,30 +170,45 @@ export async function callProvider(
   messages: ProviderMessage[],
   strictJson: boolean,
 ): Promise<Response> {
-  const { key, base, model } = config();
-  return fetch(`${base}/chat/completions`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${key}`,
-    },
-    body: JSON.stringify({
-      model,
-      temperature: 0.1,
-      max_tokens: 3000,
-      messages,
-      ...(strictJson ? { response_format: { type: "json_object" } } : {}),
-    }),
-    signal: AbortSignal.timeout(50_000),
-    cache: "no-store",
-  });
+  let lastResponse: Response | null = null;
+  let lastError: unknown = null;
+
+  for (const provider of providers()) {
+    try {
+      const response = await fetch(`${provider.base}/chat/completions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${provider.key}`,
+        },
+        body: JSON.stringify({
+          model: provider.model,
+          temperature: 0.1,
+          max_tokens: 3000,
+          messages,
+          ...(strictJson ? { response_format: { type: "json_object" } } : {}),
+        }),
+        signal: AbortSignal.timeout(
+          provider.base.includes("localhost") ? 3_000 : 50_000,
+        ),
+        cache: "no-store",
+      });
+      if (response.ok) return response;
+      lastResponse = response;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  if (lastResponse) return lastResponse;
+  throw lastError ?? new Error("No AI provider configured");
 }
 
 export async function gradeWithAi(
   simulation: DshSimulation,
   answers: DshAnswers,
 ): Promise<AiEvaluation> {
-  const { model } = config();
+  const model = aiModelName();
   const tasks = buildTasks(simulation, answers);
   if (tasks.length === 0) {
     return { results: [], model, summary: undefined };
