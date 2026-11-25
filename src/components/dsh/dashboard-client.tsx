@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 
 import type { DshCopy } from "@/lib/dsh/copy";
+import type { ProgressIndex } from "@/lib/dsh/progress";
 import type { Locale } from "@/lib/i18n/config";
 
 /**
@@ -26,7 +27,7 @@ const Dashboard = dynamic(
 export function DashboardClient(props: {
   locale: Locale;
   copy: DshCopy;
-  simulations: { id: string; slug: string; title: string }[];
+  index: ProgressIndex;
 }) {
   return <Dashboard {...props} />;
 }

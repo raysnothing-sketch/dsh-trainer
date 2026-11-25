@@ -125,6 +125,12 @@ export function SimulationRunner({
       max: result.total.max,
       percent: result.total.percent,
       level: result.total.level,
+      detail: {
+        results: result.results,
+        answers,
+        leseverstehen: result.leseverstehen,
+        strukturen: result.strukturen,
+      },
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
   }

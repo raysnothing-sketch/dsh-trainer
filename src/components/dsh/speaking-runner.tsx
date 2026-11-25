@@ -156,6 +156,7 @@ export function SpeakingRunner({ copy, hrefHub }: { copy: DshCopy; hrefHub: stri
       max: exam.maxPoints,
       percent: level.percent,
       level: level.key,
+      detail: { results: next, answers },
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
   }

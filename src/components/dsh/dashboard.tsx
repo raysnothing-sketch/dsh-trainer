@@ -6,6 +6,13 @@ import { useState } from "react";
 import { levelTone } from "@/lib/dsh";
 import type { DshCopy } from "@/lib/dsh/copy";
 import {
+  buildSkillStats,
+  collectReviewErrors,
+  type ProgressIndex,
+  type ReviewError,
+  type SkillStat,
+} from "@/lib/dsh/progress";
+import {
   loadDrillStats,
   loadModuleAttempts,
   loadProgress,
@@ -25,6 +32,14 @@ type Activity = {
   max: number;
   percent: number;
   level: DshLevelKey;
+  hasDetail: boolean;
+};
+
+type Snapshot = {
+  activities: Activity[];
+  skills: SkillStat[];
+  errors: ReviewError[];
+  drills: DrillStats;
 };
 
 const LEVEL_ORDER: DshLevelKey[] = ["dsh3", "dsh2", "dsh1", "none"];
@@ -34,6 +49,17 @@ const LEVEL_BAR: Record<DshLevelKey, string> = {
   dsh1: "bg-violet",
   none: "bg-mute",
 };
+const SKILL_BAR = [
+  "bg-violet",
+  "bg-cyan",
+  "bg-lime",
+  "bg-amber-300",
+  "bg-violet/70",
+  "bg-cyan/70",
+  "bg-lime/70",
+  "bg-amber-300/70",
+  "bg-mute",
+];
 
 function safePercent(value: number): number {
   return Number.isFinite(value) ? Math.min(100, Math.max(0, value)) : 0;
@@ -50,13 +76,6 @@ function moduleLabel(moduleId: string, copy: DshCopy): string {
   return moduleId;
 }
 
-function moduleHref(moduleId: string, locale: Locale): string {
-  if (moduleId.startsWith("hoeren")) return `/${locale}/hoeren`;
-  if (moduleId.startsWith("sprechen")) return `/${locale}/sprechen`;
-  if (moduleId.startsWith("schreiben")) return `/${locale}/schreiben`;
-  return `/${locale}`;
-}
-
 function formatDate(value: string, locale: Locale): string {
   const tag = locale === "de" ? "de-DE" : locale === "fr" ? "fr-FR" : "en-GB";
   const date = new Date(value);
@@ -68,41 +87,46 @@ function formatDate(value: string, locale: Locale): string {
   }).format(date);
 }
 
-function buildActivities(
-  locale: Locale,
-  copy: DshCopy,
-  simulations: { id: string; slug: string; title: string }[],
-): Activity[] {
-  const byId = new Map(simulations.map((simulation) => [simulation.id, simulation]));
+function buildSnapshot(index: ProgressIndex, locale: Locale, copy: DshCopy): Snapshot {
+  const simulationAttempts = loadProgress().attempts;
+  const moduleAttempts = loadModuleAttempts();
+  const byId = new Map(index.simulations.map((source) => [source.id, source]));
 
-  const simActivities: Activity[] = loadProgress().attempts.map((attempt) => {
-    const simulation = byId.get(attempt.simulationId);
+  const simActivities: Activity[] = simulationAttempts.map((attempt) => {
+    const source = byId.get(attempt.simulationId);
     return {
       id: attempt.simulationId,
       kind: "simulation",
-      title: simulation?.title ?? attempt.simulationId,
-      href: simulation ? `/${locale}/simulation/${simulation.slug}` : `/${locale}`,
+      title: source?.title ?? attempt.simulationId,
+      href: source ? `/${locale}${source.path}` : `/${locale}`,
       at: attempt.at,
       points: attempt.points,
       max: attempt.max,
       percent: safePercent(attempt.percent),
       level: attempt.level,
+      hasDetail: Boolean(attempt.detail),
     };
   });
 
-  const moduleActivities: Activity[] = loadModuleAttempts().map((attempt) => ({
+  const moduleActivities: Activity[] = moduleAttempts.map((attempt) => ({
     id: attempt.moduleId,
     kind: "module",
     title: moduleLabel(attempt.moduleId, copy),
-    href: moduleHref(attempt.moduleId, locale),
+    href: `/${locale}/${attempt.moduleId.split("-")[0]}`,
     at: attempt.at,
     points: attempt.points,
     max: attempt.max,
     percent: safePercent(attempt.percent),
     level: attempt.level,
+    hasDetail: Boolean(attempt.detail),
   }));
 
-  return [...simActivities, ...moduleActivities].sort((a, b) => b.at.localeCompare(a.at));
+  return {
+    activities: [...simActivities, ...moduleActivities].sort((a, b) => b.at.localeCompare(a.at)),
+    skills: buildSkillStats(index, simulationAttempts, moduleAttempts),
+    errors: collectReviewErrors(index, simulationAttempts, moduleAttempts),
+    drills: loadDrillStats(),
+  };
 }
 
 /**
@@ -114,20 +138,21 @@ function buildActivities(
 export function Dashboard({
   locale,
   copy,
-  simulations,
+  index,
 }: {
   locale: Locale;
   copy: DshCopy;
-  simulations: { id: string; slug: string; title: string }[];
+  index: ProgressIndex;
 }) {
-  const [activities] = useState<Activity[]>(() => buildActivities(locale, copy, simulations));
-  const [drills] = useState<DrillStats>(() => loadDrillStats());
+  const [snapshot] = useState<Snapshot>(() => buildSnapshot(index, locale, copy));
+  const { activities, skills, errors, drills } = snapshot;
 
   const latest = activities[0];
   const average = activities.length
     ? Math.round(activities.reduce((sum, item) => sum + item.percent, 0) / activities.length)
     : 0;
   const best = activities.length ? Math.max(...activities.map((item) => item.percent)) : 0;
+  const gradedSkills = skills.filter((skill) => skill.count > 0);
 
   return (
     <div className="pb-20">
@@ -213,6 +238,99 @@ export function Dashboard({
             </div>
           </div>
 
+          {gradedSkills.length > 0 ? (
+            <div className="panel mt-4 p-5 sm:p-7">
+              <p className="dsh-margin-note">{copy.dashboard.skills}</p>
+              <h2 className="mt-2 text-[1.35rem]">{copy.dashboard.skills}</h2>
+              <p className="mt-1 font-display text-[0.88rem] text-mute">{copy.dashboard.skillsLead}</p>
+              <div className="mt-6 grid gap-x-8 gap-y-4 md:grid-cols-2">
+                {gradedSkills.map((skill, index) => (
+                  <div key={skill.skill}>
+                    <div className="flex items-baseline justify-between gap-3 font-mono text-[0.6rem] tracking-[0.08em] uppercase">
+                      <span className="min-w-0 truncate text-chalk">
+                        {copy.skills[skill.skill] ?? skill.skill}
+                      </span>
+                      <span className="shrink-0 tabular-nums text-mute">
+                        {skill.percent} % · {skill.count}
+                      </span>
+                    </div>
+                    <div className="mt-1.5 h-1.5 bg-line">
+                      <div
+                        className={cn("h-full", SKILL_BAR[index % SKILL_BAR.length])}
+                        style={{ width: `${skill.percent}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          <div className="panel mt-4 p-5 sm:p-7">
+            <div className="flex flex-col gap-2 border-b border-line pb-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="dsh-margin-note">{copy.dashboard.errors}</p>
+                <h2 className="mt-2 text-[1.35rem]">{copy.dashboard.errors}</h2>
+                <p className="mt-1 font-display text-[0.88rem] text-mute">{copy.dashboard.errorsLead}</p>
+              </div>
+              <span className="font-mono text-[0.58rem] tracking-[0.12em] text-mute uppercase">
+                {errors.length}
+              </span>
+            </div>
+
+            {errors.length === 0 ? (
+              <p className="mt-5 font-display text-[0.92rem] leading-relaxed text-mute">
+                {copy.dashboard.errorsEmpty}
+              </p>
+            ) : (
+              <div className="mt-2 max-h-[34rem] divide-y divide-line overflow-y-auto pr-1">
+                {errors.map((error) => (
+                  <details key={error.key} className="group py-3.5">
+                    <summary className="flex cursor-pointer list-none items-start gap-3 [&::-webkit-details-marker]:hidden">
+                      <span className="mt-0.5 grid size-7 shrink-0 place-items-center border border-violet/50 bg-violet/10 font-mono text-[0.6rem] text-violet">
+                        {error.number}
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block font-display text-[0.92rem] leading-relaxed text-chalk">
+                          {error.prompt}
+                        </span>
+                        <span className="mt-1 block font-mono text-[0.58rem] tracking-[0.08em] text-mute uppercase">
+                          {error.sourceTitle} · {copy.skills[error.skill] ?? error.skill}
+                        </span>
+                      </span>
+                      <span className="shrink-0 font-mono text-[0.95rem] text-mute transition-transform group-open:rotate-45">
+                        +
+                      </span>
+                    </summary>
+                    <div className="mt-3 grid gap-3 pl-10 sm:grid-cols-2">
+                      <AnswerBox label={copy.dashboard.yourAnswer} value={error.given} tone="text-amber-300" />
+                      <AnswerBox label={copy.dashboard.solution} value={error.expected} tone="text-lime" />
+                      {error.explanation ? (
+                        <div className="sm:col-span-2">
+                          <p className="font-mono text-[0.55rem] tracking-[0.14em] text-mute uppercase">
+                            {copy.dashboard.hint}
+                          </p>
+                          <p className="mt-1 font-display text-[0.82rem] leading-relaxed text-chalk/80">
+                            {error.explanation}
+                          </p>
+                        </div>
+                      ) : null}
+                      <Link
+                        href={`/${locale}${error.path}`}
+                        className="inline-flex w-fit items-center border-b border-line pb-0.5 font-mono text-[0.6rem] tracking-[0.1em] text-mute uppercase transition-colors hover:border-violet hover:text-violet sm:col-span-2"
+                      >
+                        {copy.dashboard.openExercise} →
+                      </Link>
+                    </div>
+                  </details>
+                ))}
+              </div>
+            )}
+            <p className="mt-4 border-t border-line pt-3 font-mono text-[0.56rem] leading-relaxed text-mute">
+              {copy.dashboard.errorsNote}
+            </p>
+          </div>
+
           <div className="panel mt-4 p-5 sm:p-7">
             <div className="flex flex-col gap-2 border-b border-line pb-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
@@ -229,9 +347,16 @@ export function Dashboard({
               {activities.slice(0, 8).map((item, index) => (
                 <li key={`${item.kind}-${item.id}-${item.at}-${index}`} className="flex items-center gap-4 py-3.5">
                   <div className="min-w-0 flex-1">
-                    <p className="dsh-stamp text-cyan">
-                      {item.kind === "simulation" ? copy.dashboard.simulation : moduleLabel(item.id, copy)}
-                    </p>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="dsh-stamp text-cyan">
+                        {item.kind === "simulation" ? copy.dashboard.simulation : moduleLabel(item.id, copy)}
+                      </p>
+                      {item.hasDetail ? (
+                        <span className="border border-line px-1.5 py-0.5 font-mono text-[0.5rem] tracking-[0.1em] text-mute uppercase">
+                          {copy.dashboard.detailBadge}
+                        </span>
+                      ) : null}
+                    </div>
                     <p className="mt-1 truncate font-display text-[1rem] text-chalk">{item.title}</p>
                     <p className="mt-0.5 font-mono text-[0.56rem] tracking-[0.08em] text-mute uppercase">
                       {formatDate(item.at, locale)}
@@ -258,6 +383,17 @@ export function Dashboard({
           </div>
         </section>
       )}
+    </div>
+  );
+}
+
+function AnswerBox({ label, value, tone }: { label: string; value: string; tone: string }) {
+  return (
+    <div className="rounded-xl border border-line/60 bg-ink-soft/50 px-3 py-2">
+      <p className="font-mono text-[0.55rem] tracking-[0.14em] text-mute uppercase">{label}</p>
+      <p className={cn("mt-1 font-display text-[0.85rem] leading-relaxed whitespace-pre-wrap", tone)}>
+        {value}
+      </p>
     </div>
   );
 }

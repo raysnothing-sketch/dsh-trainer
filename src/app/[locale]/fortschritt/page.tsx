@@ -2,17 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { DashboardClient } from "@/components/dsh/dashboard-client";
-import { simulations } from "@/lib/dsh";
 import { dshCopy } from "@/lib/dsh/copy";
+import { buildProgressIndex } from "@/lib/dsh/progress-index";
 import { dshAlternates } from "@/lib/dsh/seo";
 import { isLocale } from "@/lib/i18n/config";
-
-/** Nur die leichten Metadaten werden zum Client geschickt, nicht die Texte. */
-const simulationIndex = simulations.map((simulation) => ({
-  id: simulation.id,
-  slug: simulation.slug,
-  title: simulation.title,
-}));
 
 export async function generateMetadata({
   params,
@@ -37,11 +30,5 @@ export default async function ProgressPage({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
-  return (
-    <DashboardClient
-      locale={locale}
-      copy={dshCopy[locale]}
-      simulations={simulationIndex}
-    />
-  );
+  return <DashboardClient locale={locale} copy={dshCopy[locale]} index={buildProgressIndex()} />;
 }

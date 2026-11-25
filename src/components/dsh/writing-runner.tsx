@@ -77,6 +77,7 @@ export function WritingRunner({ copy, hrefHub }: { copy: DshCopy; hrefHub: strin
       max: exam.maxPoints,
       percent: level.percent,
       level: level.key,
+      detail: { results: next, answers },
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
   }

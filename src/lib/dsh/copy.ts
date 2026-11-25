@@ -38,6 +38,17 @@ export type DshCopy = {
     simulation: string;
     localNote: string;
     latest: string;
+    skills: string;
+    skillsLead: string;
+    errors: string;
+    errorsLead: string;
+    errorsEmpty: string;
+    errorsNote: string;
+    yourAnswer: string;
+    solution: string;
+    hint: string;
+    openExercise: string;
+    detailBadge: string;
   };
   hub: {
     kicker: string;
@@ -267,6 +278,7 @@ export type DshCopy = {
     back: string;
   };
   types: Record<string, string>;
+  skills: Record<string, string>;
   levels: Record<DshLevelKey, { label: string; note: string }>;
 };
 
@@ -303,6 +315,17 @@ const de: DshCopy = {
     simulation: "Simulation",
     localNote: "Nur in diesem Browser gespeichert – kein Konto, keine Übertragung.",
     latest: "Letzter Versuch",
+    skills: "Kompetenzen",
+    skillsLead: "Punktanteile über alle ausgewerteten Aufgaben – von Leseverstehen bis Schreiben.",
+    errors: "Fehler wiederholen",
+    errorsLead: "Falsche oder unsichere Antworten mit Lösung und direktem Sprung zur Aufgabe.",
+    errorsEmpty: "Keine offenen Fehler. Alle ausgewerteten Aufgaben sind korrekt.",
+    errorsNote: "Nur Versuche mit Detailauswertung erscheinen hier. Ältere Versuche zählen weiterhin im Gesamtergebnis.",
+    yourAnswer: "Deine Antwort",
+    solution: "Lösung",
+    hint: "Hinweis",
+    openExercise: "Aufgabe öffnen",
+    detailBadge: "Korrektur",
   },
   hub: {
     kicker: "DSH · Leseverstehen & Strukturen",
@@ -582,6 +605,17 @@ const de: DshCopy = {
     konjunktiv: "Konjunktiv II",
     bezug: "Bezüge",
   },
+  skills: {
+    verstehen: "Leseverstehen",
+    wortschatz: "Wortschatz",
+    grafik: "Grafiken & Tabellen",
+    transfer: "Transfer",
+    korrekt: "Sprachliche Korrektheit",
+    strukturen: "Strukturen",
+    hoeren: "Hörverstehen",
+    sprechen: "Sprechen",
+    schreiben: "Schreiben",
+  },
   levels: {
     none: { label: "Nicht bestanden", note: "Unter 57 % – für die Zulassung reicht das nicht." },
     dsh1: { label: "DSH-1", note: "57–66 % – Zulassung nur in einzelnen Fächern." },
@@ -623,6 +657,17 @@ const fr: DshCopy = {
     simulation: "Simulation",
     localNote: "Enregistré uniquement dans ce navigateur — aucun compte, aucune transmission.",
     latest: "Dernier essai",
+    skills: "Compétences",
+    skillsLead: "Parts de points sur toutes les tâches évaluées, de la compréhension écrite à l'expression écrite.",
+    errors: "Réviser les erreurs",
+    errorsLead: "Réponses fausses ou incertaines, avec la solution et un accès direct à l'exercice.",
+    errorsEmpty: "Aucune erreur en attente. Toutes les tâches évaluées sont correctes.",
+    errorsNote: "Seuls les essais avec correction détaillée apparaissent ici. Les essais anciens comptent toujours dans le résultat global.",
+    yourAnswer: "Votre réponse",
+    solution: "Solution",
+    hint: "Indication",
+    openExercise: "Ouvrir l'exercice",
+    detailBadge: "Correction",
   },
   hub: {
     kicker: "DSH · Compréhension écrite & structures",
@@ -902,6 +947,17 @@ const fr: DshCopy = {
     konjunktiv: "Konjunktiv II",
     bezug: "Références",
   },
+  skills: {
+    verstehen: "Compréhension écrite",
+    wortschatz: "Vocabulaire",
+    grafik: "Graphiques & tableaux",
+    transfer: "Transfert",
+    korrekt: "Correction linguistique",
+    strukturen: "Structures",
+    hoeren: "Compréhension orale",
+    sprechen: "Expression orale",
+    schreiben: "Expression écrite",
+  },
   levels: {
     none: { label: "Non validé", note: "Moins de 57 % – insuffisant pour une admission." },
     dsh1: { label: "DSH-1", note: "57–66 % – admission dans quelques filières seulement." },
@@ -942,6 +998,17 @@ const en: DshCopy = {
     simulation: "Simulation",
     localNote: "Stored only in this browser — no account, no upload.",
     latest: "Latest attempt",
+    skills: "Skills",
+    skillsLead: "Point shares across all graded tasks, from reading comprehension to writing.",
+    errors: "Review mistakes",
+    errorsLead: "Wrong or uncertain answers with the solution and a direct link back to the task.",
+    errorsEmpty: "No open mistakes. Every graded task is correct.",
+    errorsNote: "Only attempts with detailed grading appear here. Older attempts still count towards the overall result.",
+    yourAnswer: "Your answer",
+    solution: "Solution",
+    hint: "Hint",
+    openExercise: "Open task",
+    detailBadge: "Graded",
   },
   hub: {
     kicker: "DSH · Reading comprehension & structures",
@@ -1220,6 +1287,17 @@ const en: DshCopy = {
     konnektor: "Connectors",
     konjunktiv: "Konjunktiv II",
     bezug: "References",
+  },
+  skills: {
+    verstehen: "Reading",
+    wortschatz: "Vocabulary",
+    grafik: "Charts & tables",
+    transfer: "Transfer",
+    korrekt: "Language accuracy",
+    strukturen: "Structures",
+    hoeren: "Listening",
+    sprechen: "Speaking",
+    schreiben: "Writing",
   },
   levels: {
     none: { label: "Not passed", note: "Below 57% – not enough for admission." },

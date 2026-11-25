@@ -1,6 +1,7 @@
 "use client";
 
-import type { DshAnswers } from "@/lib/dsh/scoring";
+import type { ModuleTaskResult } from "@/lib/dsh/module-scoring";
+import type { CriterionResult, DshAnswers, ItemResult } from "@/lib/dsh/scoring";
 import type { DshLevelKey } from "@/lib/dsh/types";
 
 /**
@@ -13,6 +14,24 @@ const PROGRESS_KEY = "dsh:progress:v1";
 const DRILL_KEY = "dsh:drills:v1";
 const MODULE_KEY = "dsh:modules:v1";
 
+/** Kompakte Fassung eines QuestionResult – nur das, was die Auswertung braucht. */
+export type StoredQuestionResult = {
+  id: string;
+  points: number;
+  max: number;
+  source: "auto" | "local" | "ai";
+  met: CriterionResult[];
+  feedback?: string;
+  items?: ItemResult[];
+};
+
+export type StoredSimulationDetail = {
+  results: Record<string, StoredQuestionResult>;
+  answers: DshAnswers;
+  leseverstehen: { points: number; max: number };
+  strukturen: { points: number; max: number };
+};
+
 export type StoredAttempt = {
   simulationId: string;
   at: string;
@@ -20,6 +39,8 @@ export type StoredAttempt = {
   max: number;
   percent: number;
   level: DshLevelKey;
+  /** Fehlt bei Versuchen, die vor dieser Version gespeichert wurden. */
+  detail?: StoredSimulationDetail;
 };
 
 export type Progress = {
@@ -96,6 +117,11 @@ export function saveDrillStats(stats: DrillStats): void {
 
 /* --- Modules Hörverstehen / Sprechen / Schreiben ------------------------ */
 
+export type StoredModuleDetail = {
+  results: ModuleTaskResult[];
+  answers: Record<string, string>;
+};
+
 export type ModuleAttempt = {
   moduleId: string;
   at: string;
@@ -103,6 +129,8 @@ export type ModuleAttempt = {
   max: number;
   percent: number;
   level: DshLevelKey;
+  /** Fehlt bei Versuchen, die vor dieser Version gespeichert wurden. */
+  detail?: StoredModuleDetail;
 };
 
 export type ModuleProgress = {
