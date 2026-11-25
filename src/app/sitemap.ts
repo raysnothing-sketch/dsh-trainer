@@ -9,6 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const base = env.siteUrl().replace(/\/$/, "");
   const paths = [
     "/",
+    "/fortschritt",
     "/strukturen",
     "/lernen",
     ...lessonKeys.map((key) => `/lernen/${key}`),

@@ -129,6 +129,12 @@ export default async function DshHomePage({
               >
                 {copy.learn.nav} →
               </Link>
+              <Link
+                href={`/${locale}/fortschritt`}
+                className="border-b border-line pb-1 font-mono text-[0.6rem] tracking-[0.12em] text-mute uppercase transition-colors hover:border-violet hover:text-violet"
+              >
+                {copy.nav.dashboard} →
+              </Link>
             </div>
           </div>
 

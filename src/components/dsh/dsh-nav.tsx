@@ -22,6 +22,11 @@ export function DshNav({ locale, copy }: { locale: Locale; copy: DshCopy }) {
       active: pathname === `/${locale}` || pathname.includes("/simulation/"),
     },
     {
+      href: `/${locale}/fortschritt`,
+      label: copy.nav.dashboard,
+      active: pathname.includes("/fortschritt"),
+    },
+    {
       href: `/${locale}/strukturen`,
       label: copy.nav.structures,
       active: pathname.includes("/strukturen"),

@@ -14,6 +14,30 @@ export type DshCopy = {
     simulations: string;
     structures: string;
     guide: string;
+    dashboard: string;
+  };
+  dashboard: {
+    kicker: string;
+    title: string;
+    lead: string;
+    attempts: string;
+    average: string;
+    best: string;
+    currentLevel: string;
+    drills: string;
+    trend: string;
+    trendLead: string;
+    levels: string;
+    levelsLead: string;
+    recent: string;
+    recentLead: string;
+    empty: string;
+    emptyLead: string;
+    emptyCta: string;
+    noLevel: string;
+    simulation: string;
+    localNote: string;
+    latest: string;
   };
   hub: {
     kicker: string;
@@ -252,6 +276,33 @@ const de: DshCopy = {
     simulations: "Simulationen",
     structures: "Strukturen",
     guide: "Leitfaden",
+    dashboard: "Fortschritt",
+  },
+  dashboard: {
+    kicker: "DSH · Persönlicher Fortschritt",
+    title: "Dein Fortschritt auf einen Blick.",
+    lead:
+      "Alle Ergebnisse aus Simulationen und Prüfungsteilen, die du in diesem Browser erreicht hast – als Verlauf, Niveauübersicht und letzte Versuche.",
+    attempts: "Versuche",
+    average: "Durchschnitt",
+    best: "Bestwert",
+    currentLevel: "Aktuelles Niveau",
+    drills: "Strukturübungen",
+    trend: "Ergebnisverlauf",
+    trendLead:
+      "Die letzten Ergebnisse in Prozent, vom ältesten zum neuesten Versuch.",
+    levels: "Niveaus",
+    levelsLead: "Wie oft du welches DSH-Niveau erreicht hast.",
+    recent: "Letzte Versuche",
+    recentLead: "Neueste Ergebnisse mit direktem Link zur Aufgabe.",
+    empty: "Noch keine Ergebnisse.",
+    emptyLead:
+      "Sobald du eine Simulation oder einen Prüfungsteil abschließt, erscheint hier dein Fortschritt.",
+    emptyCta: "Simulation starten",
+    noLevel: "Noch kein Niveau",
+    simulation: "Simulation",
+    localNote: "Nur in diesem Browser gespeichert – kein Konto, keine Übertragung.",
+    latest: "Letzter Versuch",
   },
   hub: {
     kicker: "DSH · Leseverstehen & Strukturen",
@@ -545,6 +596,33 @@ const fr: DshCopy = {
     simulations: "Simulations",
     structures: "Structures",
     guide: "Guide",
+    dashboard: "Progrès",
+  },
+  dashboard: {
+    kicker: "DSH · Progrès personnel",
+    title: "Votre progression en un coup d'œil.",
+    lead:
+      "Tous les résultats des simulations et des épreuves partielles obtenus dans ce navigateur — sous forme de courbe, de niveaux et de derniers essais.",
+    attempts: "Essais",
+    average: "Moyenne",
+    best: "Meilleur résultat",
+    currentLevel: "Niveau actuel",
+    drills: "Exercices de structures",
+    trend: "Évolution des résultats",
+    trendLead:
+      "Les derniers résultats en pourcentage, du plus ancien au plus récent.",
+    levels: "Niveaux",
+    levelsLead: "Fréquence des niveaux DSH atteints.",
+    recent: "Derniers essais",
+    recentLead: "Résultats récents avec accès direct à l'exercice.",
+    empty: "Aucun résultat pour l'instant.",
+    emptyLead:
+      "Dès que vous terminez une simulation ou une épreuve partielle, votre progression apparaît ici.",
+    emptyCta: "Lancer une simulation",
+    noLevel: "Pas encore de niveau",
+    simulation: "Simulation",
+    localNote: "Enregistré uniquement dans ce navigateur — aucun compte, aucune transmission.",
+    latest: "Dernier essai",
   },
   hub: {
     kicker: "DSH · Compréhension écrite & structures",
@@ -838,6 +916,32 @@ const en: DshCopy = {
     simulations: "Simulations",
     structures: "Structures",
     guide: "Guide",
+    dashboard: "Progress",
+  },
+  dashboard: {
+    kicker: "DSH · Personal progress",
+    title: "Your progress at a glance.",
+    lead:
+      "Every result from simulations and exam parts completed in this browser — as a trend, level overview and recent attempts.",
+    attempts: "Attempts",
+    average: "Average",
+    best: "Best score",
+    currentLevel: "Current level",
+    drills: "Structure drills",
+    trend: "Score trend",
+    trendLead: "Recent results as percentages, oldest to newest.",
+    levels: "Levels",
+    levelsLead: "How often you reached each DSH level.",
+    recent: "Recent attempts",
+    recentLead: "Latest results with a direct link back to the task.",
+    empty: "No results yet.",
+    emptyLead:
+      "As soon as you finish a simulation or an exam part, your progress appears here.",
+    emptyCta: "Start a simulation",
+    noLevel: "No level yet",
+    simulation: "Simulation",
+    localNote: "Stored only in this browser — no account, no upload.",
+    latest: "Latest attempt",
   },
   hub: {
     kicker: "DSH · Reading comprehension & structures",
