@@ -12,10 +12,14 @@ import {
   type ReviewError,
   type SkillStat,
 } from "@/lib/dsh/progress";
+import { levelFromPoints } from "@/lib/dsh/module-scoring";
 import {
   loadDrillStats,
+  loadExamAttempts,
   loadModuleAttempts,
   loadProgress,
+  loadSettings,
+  saveTargetLevel,
   type DrillStats,
 } from "@/lib/dsh/storage";
 import type { DshLevelKey } from "@/lib/dsh/types";
@@ -24,7 +28,7 @@ import { cn } from "@/lib/utils";
 
 type Activity = {
   id: string;
-  kind: "simulation" | "module";
+  kind: "simulation" | "module" | "exam";
   title: string;
   href: string;
   at: string;
@@ -40,7 +44,11 @@ type Snapshot = {
   skills: SkillStat[];
   errors: ReviewError[];
   drills: DrillStats;
+  target: DshLevelKey;
 };
+
+const LEVEL_RANK: Record<DshLevelKey, number> = { none: 0, dsh1: 1, dsh2: 2, dsh3: 3 };
+const TARGET_LEVELS: DshLevelKey[] = ["dsh1", "dsh2", "dsh3"];
 
 const LEVEL_ORDER: DshLevelKey[] = ["dsh3", "dsh2", "dsh1", "none"];
 const LEVEL_BAR: Record<DshLevelKey, string> = {
@@ -121,11 +129,27 @@ function buildSnapshot(index: ProgressIndex, locale: Locale, copy: DshCopy): Sna
     hasDetail: Boolean(attempt.detail),
   }));
 
+  const examActivities: Activity[] = loadExamAttempts().map((attempt) => ({
+    id: `exam-${attempt.at}`,
+    kind: "exam",
+    title: copy.exam.nav,
+    href: `/${locale}/pruefung`,
+    at: attempt.at,
+    points: attempt.points,
+    max: attempt.max,
+    percent: safePercent(attempt.percent),
+    level: attempt.level,
+    hasDetail: true,
+  }));
+
   return {
-    activities: [...simActivities, ...moduleActivities].sort((a, b) => b.at.localeCompare(a.at)),
+    activities: [...simActivities, ...moduleActivities, ...examActivities].sort((a, b) =>
+      b.at.localeCompare(a.at),
+    ),
     skills: buildSkillStats(index, simulationAttempts, moduleAttempts),
     errors: collectReviewErrors(index, simulationAttempts, moduleAttempts),
     drills: loadDrillStats(),
+    target: loadSettings().targetLevel,
   };
 }
 
@@ -146,6 +170,7 @@ export function Dashboard({
 }) {
   const [snapshot] = useState<Snapshot>(() => buildSnapshot(index, locale, copy));
   const { activities, skills, errors, drills } = snapshot;
+  const [target, setTarget] = useState<DshLevelKey>(snapshot.target);
 
   const latest = activities[0];
   const average = activities.length
@@ -153,6 +178,8 @@ export function Dashboard({
     : 0;
   const best = activities.length ? Math.max(...activities.map((item) => item.percent)) : 0;
   const gradedSkills = skills.filter((skill) => skill.count > 0);
+  const currentLevel = levelFromPoints(average, 100).key;
+  const targetReached = LEVEL_RANK[currentLevel] >= LEVEL_RANK[target];
 
   return (
     <div className="pb-20">
@@ -164,9 +191,17 @@ export function Dashboard({
         <p className="mt-5 max-w-2xl font-display text-[1.05rem] leading-relaxed text-mute">
           {copy.dashboard.lead}
         </p>
-        <p className="mt-4 font-mono text-[0.58rem] tracking-[0.1em] text-mute uppercase">
-          {copy.dashboard.localNote}
-        </p>
+        <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
+          <p className="font-mono text-[0.58rem] tracking-[0.1em] text-mute uppercase">
+            {copy.dashboard.localNote}
+          </p>
+          <Link
+            href={`/${locale}/fortschritt/bericht`}
+            className="border-b border-line pb-0.5 font-mono text-[0.58rem] tracking-[0.1em] text-mute uppercase transition-colors hover:border-violet hover:text-violet"
+          >
+            {copy.dashboard.report} →
+          </Link>
+        </div>
       </header>
 
       {activities.length === 0 ? (
@@ -203,6 +238,46 @@ export function Dashboard({
               small
             />
           </dl>
+
+          <div className="panel mt-4 flex flex-col gap-4 p-5 sm:p-6 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="dsh-margin-note">{copy.dashboard.target}</p>
+              <p className="mt-2 font-display text-[0.95rem] leading-relaxed text-chalk">
+                {copy.dashboard.targetLead}
+              </p>
+              {activities.length > 0 ? (
+                <p
+                  className={cn(
+                    "mt-2 font-mono text-[0.6rem] tracking-[0.1em] uppercase",
+                    targetReached ? "text-lime" : "text-amber-300",
+                  )}
+                >
+                  {targetReached ? copy.dashboard.targetReached : copy.dashboard.targetMissing}
+                </p>
+              ) : null}
+            </div>
+            <div className="flex flex-wrap gap-2" role="group" aria-label={copy.dashboard.target}>
+              {TARGET_LEVELS.map((level) => (
+                <button
+                  key={level}
+                  type="button"
+                  aria-pressed={target === level}
+                  onClick={() => {
+                    saveTargetLevel(level);
+                    setTarget(level);
+                  }}
+                  className={cn(
+                    "border px-4 py-2.5 font-mono text-[0.65rem] tracking-[0.1em] uppercase transition-colors",
+                    target === level
+                      ? "border-violet bg-violet text-ink-card"
+                      : "border-line text-mute hover:border-violet hover:text-violet",
+                  )}
+                >
+                  {copy.levels[level].label}
+                </button>
+              ))}
+            </div>
+          </div>
 
           <div className="mt-4 grid gap-4 lg:grid-cols-[1.4fr_1fr]">
             <div className="panel p-5 sm:p-7">
@@ -349,7 +424,11 @@ export function Dashboard({
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <p className="dsh-stamp text-cyan">
-                        {item.kind === "simulation" ? copy.dashboard.simulation : moduleLabel(item.id, copy)}
+                        {item.kind === "simulation"
+                          ? copy.dashboard.simulation
+                          : item.kind === "exam"
+                            ? copy.exam.nav
+                            : moduleLabel(item.id, copy)}
                       </p>
                       {item.hasDetail ? (
                         <span className="border border-line px-1.5 py-0.5 font-mono text-[0.5rem] tracking-[0.1em] text-mute uppercase">

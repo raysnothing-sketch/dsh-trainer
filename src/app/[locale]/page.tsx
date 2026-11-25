@@ -135,6 +135,12 @@ export default async function DshHomePage({
               >
                 {copy.nav.dashboard} →
               </Link>
+              <Link
+                href={`/${locale}/pruefung`}
+                className="border-b border-line pb-1 font-mono text-[0.6rem] tracking-[0.12em] text-mute uppercase transition-colors hover:border-violet hover:text-violet"
+              >
+                {copy.nav.fullExam} →
+              </Link>
             </div>
           </div>
 

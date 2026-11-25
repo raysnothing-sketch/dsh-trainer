@@ -15,6 +15,7 @@ export type DshCopy = {
     structures: string;
     guide: string;
     dashboard: string;
+    fullExam: string;
   };
   dashboard: {
     kicker: string;
@@ -23,6 +24,8 @@ export type DshCopy = {
     attempts: string;
     average: string;
     best: string;
+    count: string;
+    score: string;
     currentLevel: string;
     drills: string;
     trend: string;
@@ -49,6 +52,54 @@ export type DshCopy = {
     hint: string;
     openExercise: string;
     detailBadge: string;
+    target: string;
+    targetLead: string;
+    targetReached: string;
+    targetMissing: string;
+    report: string;
+    reportLead: string;
+  };
+  exam: {
+    nav: string;
+    kicker: string;
+    title: string;
+    lead: string;
+    select: string;
+    scope: string;
+    points: string;
+    minutes: string;
+    start: string;
+    resume: string;
+    back: string;
+    next: string;
+    previous: string;
+    submit: string;
+    confirm: string;
+    timeLeft: string;
+    parts: { reading: string; structures: string; listening: string; speaking: string; writing: string };
+    result: string;
+    resultLead: string;
+    targetReached: string;
+    targetMissing: string;
+    tableHead: { part: string; points: string; share: string };
+    restart: string;
+    note: string;
+  };
+  report: {
+    kicker: string;
+    title: string;
+    lead: string;
+    print: string;
+    generated: string;
+    target: string;
+    summary: string;
+    history: string;
+    skills: string;
+    mistakes: string;
+    storage: string;
+    empty: string;
+    back: string;
+    note: string;
   };
   hub: {
     kicker: string;
@@ -289,6 +340,7 @@ const de: DshCopy = {
     structures: "Strukturen",
     guide: "Leitfaden",
     dashboard: "Fortschritt",
+    fullExam: "Gesamtprüfung",
   },
   dashboard: {
     kicker: "DSH · Persönlicher Fortschritt",
@@ -298,6 +350,8 @@ const de: DshCopy = {
     attempts: "Versuche",
     average: "Durchschnitt",
     best: "Bestwert",
+    count: "Anzahl",
+    score: "Ergebnis",
     currentLevel: "Aktuelles Niveau",
     drills: "Strukturübungen",
     trend: "Ergebnisverlauf",
@@ -326,6 +380,61 @@ const de: DshCopy = {
     hint: "Hinweis",
     openExercise: "Aufgabe öffnen",
     detailBadge: "Korrektur",
+    target: "Zielniveau",
+    targetLead: "Wähle das DSH-Niveau, das du erreichen möchtest.",
+    targetReached: "Ziel erreicht",
+    targetMissing: "Ziel noch nicht erreicht",
+    report: "Bericht als PDF",
+    reportLead: "Alle Ergebnisse, Kompetenzen und offenen Fehler als druckbarer Bericht.",
+  },
+  exam: {
+    nav: "Gesamtprüfung",
+    kicker: "DSH · Prüfung im Ganzen",
+    title: "Alle vier Teile. Ein Durchgang.",
+    lead:
+      "Leseverstehen, Strukturen, Hörverstehen, Sprechen und Schreiben in einem Durchgang – mit einem Timer, zwölf Aufgabenteilen und einer gemeinsamen Auswertung.",
+    select: "Simulation wählen",
+    scope: "5 Teilbereiche · 117 Punkte · 180 Minuten",
+    points: "Punkte",
+    minutes: "Minuten",
+    start: "Prüfung starten",
+    resume: "Entwurf fortsetzen",
+    back: "Zur Übersicht",
+    next: "Weiter",
+    previous: "Zurück",
+    submit: "Prüfung abgeben",
+    confirm: "Es sind noch nicht alle Felder ausgefüllt. Trotzdem abgeben?",
+    timeLeft: "Verbleibende Zeit",
+    parts: {
+      reading: "Leseverstehen",
+      structures: "Strukturen",
+      listening: "Hörverstehen",
+      speaking: "Sprechen",
+      writing: "Schreiben",
+    },
+    result: "Auswertung",
+    resultLead: "Dein Ergebnis über alle Prüfungsteile hinweg.",
+    targetReached: "Zielniveau erreicht",
+    targetMissing: "Zielniveau noch nicht erreicht",
+    tableHead: { part: "Teil", points: "Punkte", share: "Anteil" },
+    restart: "Neue Prüfung",
+    note: "Die Bewertung erfolgt lokal nach Lösungsschlüssel. Freie Antworten werden mit demselben Barème wie in den Einzelübungen bewertet.",
+  },
+  report: {
+    kicker: "DSH · Persönlicher Bericht",
+    title: "Lernbericht",
+    lead: "Ausdruckbarer Überblick über Ergebnisse, Kompetenzen und offene Fehler.",
+    print: "Als PDF speichern",
+    generated: "Erstellt am",
+    target: "Zielniveau",
+    summary: "Kurzprofil",
+    history: "Versuchsverlauf",
+    skills: "Kompetenzen",
+    mistakes: "Offene Fehler",
+    storage: "Quelle: lokal gespeicherte Ergebnisse dieses Browsers",
+    empty: "Noch keine Ergebnisse vorhanden.",
+    back: "Zurück zum Fortschritt",
+    note: "Dieser Bericht enthält keine personenbezogenen Daten und wird nicht übertragen.",
   },
   hub: {
     kicker: "DSH · Leseverstehen & Strukturen",
@@ -631,6 +740,7 @@ const fr: DshCopy = {
     structures: "Structures",
     guide: "Guide",
     dashboard: "Progrès",
+    fullExam: "Examen complet",
   },
   dashboard: {
     kicker: "DSH · Progrès personnel",
@@ -640,6 +750,8 @@ const fr: DshCopy = {
     attempts: "Essais",
     average: "Moyenne",
     best: "Meilleur résultat",
+    count: "Nombre",
+    score: "Résultat",
     currentLevel: "Niveau actuel",
     drills: "Exercices de structures",
     trend: "Évolution des résultats",
@@ -668,6 +780,61 @@ const fr: DshCopy = {
     hint: "Indication",
     openExercise: "Ouvrir l'exercice",
     detailBadge: "Correction",
+    target: "Niveau visé",
+    targetLead: "Choisissez le niveau DSH que vous souhaitez atteindre.",
+    targetReached: "Objectif atteint",
+    targetMissing: "Objectif non atteint",
+    report: "Rapport PDF",
+    reportLead: "Tous les résultats, compétences et erreurs ouvertes sous forme de rapport imprimable.",
+  },
+  exam: {
+    nav: "Examen complet",
+    kicker: "DSH · Examen dans son ensemble",
+    title: "Les quatre parties. Une seule session.",
+    lead:
+      "Compréhension écrite, structures, compréhension orale, expression orale et expression écrite en une seule session – avec chronomètre et évaluation commune.",
+    select: "Choisir une simulation",
+    scope: "5 domaines · 117 points · 180 minutes",
+    points: "points",
+    minutes: "minutes",
+    start: "Démarrer l'examen",
+    resume: "Reprendre le brouillon",
+    back: "Retour à l'accueil",
+    next: "Suivant",
+    previous: "Précédent",
+    submit: "Rendre l'examen",
+    confirm: "Tous les champs ne sont pas remplis. Rendre quand même ?",
+    timeLeft: "Temps restant",
+    parts: {
+      reading: "Compréhension écrite",
+      structures: "Structures",
+      listening: "Compréhension orale",
+      speaking: "Expression orale",
+      writing: "Expression écrite",
+    },
+    result: "Évaluation",
+    resultLead: "Votre résultat sur l'ensemble des parties de l'examen.",
+    targetReached: "Niveau visé atteint",
+    targetMissing: "Niveau visé non atteint",
+    tableHead: { part: "Partie", points: "Points", share: "Part" },
+    restart: "Nouvel examen",
+    note: "L'évaluation est locale et suit le corrigé. Les réponses libres utilisent le même barème que les exercices individuels.",
+  },
+  report: {
+    kicker: "DSH · Rapport personnel",
+    title: "Rapport d'apprentissage",
+    lead: "Vue imprimable des résultats, compétences et erreurs ouvertes.",
+    print: "Enregistrer en PDF",
+    generated: "Généré le",
+    target: "Niveau visé",
+    summary: "Profil en bref",
+    history: "Historique des essais",
+    skills: "Compétences",
+    mistakes: "Erreurs ouvertes",
+    storage: "Source : résultats enregistrés localement dans ce navigateur",
+    empty: "Aucun résultat pour l'instant.",
+    back: "Retour au progrès",
+    note: "Ce rapport ne contient aucune donnée personnelle et n'est pas transmis.",
   },
   hub: {
     kicker: "DSH · Compréhension écrite & structures",
@@ -973,6 +1140,7 @@ const en: DshCopy = {
     structures: "Structures",
     guide: "Guide",
     dashboard: "Progress",
+    fullExam: "Full exam",
   },
   dashboard: {
     kicker: "DSH · Personal progress",
@@ -982,6 +1150,8 @@ const en: DshCopy = {
     attempts: "Attempts",
     average: "Average",
     best: "Best score",
+    count: "Count",
+    score: "Result",
     currentLevel: "Current level",
     drills: "Structure drills",
     trend: "Score trend",
@@ -1009,6 +1179,61 @@ const en: DshCopy = {
     hint: "Hint",
     openExercise: "Open task",
     detailBadge: "Graded",
+    target: "Target level",
+    targetLead: "Choose the DSH level you want to reach.",
+    targetReached: "Target reached",
+    targetMissing: "Target not reached",
+    report: "PDF report",
+    reportLead: "All results, skills and open mistakes as a printable report.",
+  },
+  exam: {
+    nav: "Full exam",
+    kicker: "DSH · The complete exam",
+    title: "All parts. One sitting.",
+    lead:
+      "Reading, structures, listening, speaking and writing in one sitting – with a single timer and one combined result.",
+    select: "Choose a simulation",
+    scope: "5 sections · 117 points · 180 minutes",
+    points: "points",
+    minutes: "minutes",
+    start: "Start exam",
+    resume: "Resume draft",
+    back: "Back to overview",
+    next: "Next",
+    previous: "Back",
+    submit: "Submit exam",
+    confirm: "Not all fields are filled in. Submit anyway?",
+    timeLeft: "Time left",
+    parts: {
+      reading: "Reading",
+      structures: "Structures",
+      listening: "Listening",
+      speaking: "Speaking",
+      writing: "Writing",
+    },
+    result: "Result",
+    resultLead: "Your score across every section of the exam.",
+    targetReached: "Target level reached",
+    targetMissing: "Target level not reached",
+    tableHead: { part: "Section", points: "Points", share: "Share" },
+    restart: "New exam",
+    note: "Grading is local and follows the answer key. Free responses use the same rubric as the individual exercises.",
+  },
+  report: {
+    kicker: "DSH · Personal report",
+    title: "Learning report",
+    lead: "Printable overview of results, skills and open mistakes.",
+    print: "Save as PDF",
+    generated: "Generated on",
+    target: "Target level",
+    summary: "At a glance",
+    history: "Attempt history",
+    skills: "Skills",
+    mistakes: "Open mistakes",
+    storage: "Source: results stored locally in this browser",
+    empty: "No results yet.",
+    back: "Back to progress",
+    note: "This report contains no personal data and is never uploaded.",
   },
   hub: {
     kicker: "DSH · Reading comprehension & structures",

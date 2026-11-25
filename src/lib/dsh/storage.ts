@@ -171,3 +171,77 @@ export function loadModuleAttempts(moduleId?: string): ModuleAttempt[] {
   const attempts = loadModuleProgress().attempts;
   return moduleId ? attempts.filter((attempt) => attempt.moduleId === moduleId) : attempts;
 }
+
+/* --- Zielniveau --------------------------------------------------------- */
+
+const SETTINGS_KEY = "dsh:settings:v1";
+
+export type Settings = { targetLevel: DshLevelKey };
+
+export function loadSettings(): Settings {
+  const stored = read<Partial<Settings>>(SETTINGS_KEY, { targetLevel: "dsh2" });
+  const level = stored.targetLevel;
+  return {
+    targetLevel: level === "dsh1" || level === "dsh2" || level === "dsh3" ? level : "dsh2",
+  };
+}
+
+export function saveTargetLevel(targetLevel: DshLevelKey): void {
+  write(SETTINGS_KEY, { targetLevel });
+}
+
+/* --- Gesamtprüfung ------------------------------------------------------ */
+
+const EXAM_KEY = "dsh:exam:v1";
+const EXAM_DRAFT_KEY = "dsh:exam:draft:v1";
+
+export type ExamPartScores = {
+  leseverstehen: { points: number; max: number };
+  strukturen: { points: number; max: number };
+  hoeren: { points: number; max: number };
+  sprechen: { points: number; max: number };
+  schreiben: { points: number; max: number };
+};
+
+export type FullExamAttempt = {
+  at: string;
+  simulationId: string;
+  parts: ExamPartScores;
+  points: number;
+  max: number;
+  percent: number;
+  level: DshLevelKey;
+  targetLevel: DshLevelKey;
+};
+
+export type FullExamDraft = {
+  simulationId: string;
+  answers: Record<string, string>;
+  savedAt: string;
+};
+
+export function loadExamAttempts(): FullExamAttempt[] {
+  const stored = read<FullExamAttempt[]>(EXAM_KEY, []);
+  return Array.isArray(stored) ? stored : [];
+}
+
+export function recordExamAttempt(attempt: FullExamAttempt): void {
+  write(EXAM_KEY, [attempt, ...loadExamAttempts()].slice(0, 20));
+}
+
+export function loadExamDraft(): FullExamDraft | null {
+  return read<FullExamDraft | null>(EXAM_DRAFT_KEY, null);
+}
+
+export function saveExamDraft(draft: FullExamDraft): void {
+  write(EXAM_DRAFT_KEY, draft);
+}
+
+export function clearExamDraft(): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.removeItem(EXAM_DRAFT_KEY);
+  } catch {
+    /* ignored */
+  }
+}

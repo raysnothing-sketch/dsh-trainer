@@ -186,7 +186,51 @@ body:has(.dsh) > a[href="#contenu"]:focus {
 }
 
 @media print {
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+
+  html,
+  body,
   .dsh {
-    background: #fff;
+    background: #fff !important;
+    color: #111 !important;
+  }
+
+  header.dsh-rule-double,
+  footer.dsh-rule-double,
+  .dsh-report-actions {
+    display: none !important;
+  }
+
+  .dsh-report {
+    padding-bottom: 0 !important;
+  }
+
+  .dsh-report .panel {
+    border-color: #aaa !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+
+  .dsh-report h1,
+  .dsh-report h2,
+  .dsh-report .dsh-margin-note {
+    break-after: avoid;
+  }
+
+  .dsh-report tr,
+  .dsh-report li {
+    break-inside: avoid;
+  }
+
+  .dsh-report .text-violet,
+  .dsh-report .text-cyan,
+  .dsh-report .text-lime,
+  .dsh-report .text-amber-300,
+  .dsh-report .text-chalk,
+  .dsh-report .text-mute {
+    color: #111 !important;
   }
 }
